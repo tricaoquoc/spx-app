@@ -1,5 +1,8 @@
 name: Build APK
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ "main", "master" ]
@@ -13,10 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 1. Bật bộ nhớ đệm cho Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -24,10 +29,23 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      # 2. Bật bộ nhớ đệm cho Flutter SDK
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
+
+      # 3. Tự động phục hồi bộ nhớ đệm của Android/Gradle
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Install dependencies
         run: |
