@@ -52,7 +52,7 @@ def main(page: ft.Page):
 
     # --- KHU VỰC CÀI ĐẶT COOKIE ---
     cookie_input = ft.TextField(
-        label="Dán Cookie SPX vào đây (SPC_EC=...)",
+        label="Dán cookie",
         value=load_cookie(),
         multiline=True,
         min_lines=8,
@@ -72,6 +72,10 @@ def main(page: ft.Page):
         save_cookie(cookie_input.value)
         toggle_settings(e)
 
+    def clear_cookie_action(e):
+        cookie_input.value = ""
+        page.update()
+
     settings_ui = ft.Container(
         content=ft.Column([
             ft.Row([
@@ -79,20 +83,33 @@ def main(page: ft.Page):
                 ft.Text("CẤU HÌNH HỆ THỐNG", weight=ft.FontWeight.BOLD, size=18, color=ft.Colors.GREY_800),
             ], alignment=ft.MainAxisAlignment.START),
             ft.Divider(color=ft.Colors.GREY_200, height=20),
-            ft.Text("Vui lòng lấy Cookie từ Network tab trên trình duyệt của bạn và dán vào bên dưới:", color=ft.Colors.GREY_600, size=14),
             cookie_input,
             ft.Container(
-                content=ft.ElevatedButton(
-                    content=ft.Text("LƯU VÀ QUAY LẠI", weight=ft.FontWeight.BOLD), 
-                    on_click=save_cookie_action,
-                    style=ft.ButtonStyle(
-                        color=ft.Colors.WHITE, 
-                        bgcolor=PRIMARY_COLOR,
-                        shape=ft.RoundedRectangleBorder(radius=10)
+                content=ft.Row([
+                    ft.ElevatedButton(
+                        content=ft.Text("XOÁ HẾT", weight=ft.FontWeight.BOLD),
+                        on_click=clear_cookie_action,
+                        style=ft.ButtonStyle(
+                            color=PRIMARY_COLOR,
+                            bgcolor=ft.Colors.WHITE,
+                            shape=ft.RoundedRectangleBorder(radius=10),
+                            side=ft.BorderSide(1, PRIMARY_COLOR)
+                        ),
+                        height=50,
+                        expand=True
                     ),
-                    height=50,
-                    width=float('inf')
-                ),
+                    ft.ElevatedButton(
+                        content=ft.Text("LƯU & ĐÓNG", weight=ft.FontWeight.BOLD), 
+                        on_click=save_cookie_action,
+                        style=ft.ButtonStyle(
+                            color=ft.Colors.WHITE, 
+                            bgcolor=PRIMARY_COLOR,
+                            shape=ft.RoundedRectangleBorder(radius=10)
+                        ),
+                        height=50,
+                        expand=True
+                    )
+                ], spacing=10),
                 padding=ft.Padding.only(top=10)
             )
         ], expand=True),
@@ -348,7 +365,7 @@ def main(page: ft.Page):
             shape=ft.RoundedRectangleBorder(radius=12)
         ),
         height=48,
-        width=120
+        expand=True
     )
 
     loading_button = ft.ElevatedButton(
@@ -363,10 +380,28 @@ def main(page: ft.Page):
         ),
         disabled=True,
         height=48,
-        width=120
+        expand=True
     )
     
-    button_container = ft.Container(content=search_button)
+    button_container = ft.Container(content=search_button, expand=True)
+
+    def reset_input(e):
+        input_field.value = ""
+        suggestions_container.visible = False
+        page.update()
+
+    reset_button = ft.ElevatedButton(
+        content=ft.Text("Nhập lại", weight=ft.FontWeight.BOLD, size=14),
+        on_click=reset_input,
+        style=ft.ButtonStyle(
+            color=PRIMARY_COLOR,
+            bgcolor=ft.Colors.WHITE,
+            shape=ft.RoundedRectangleBorder(radius=12),
+            side=ft.BorderSide(1, PRIMARY_COLOR)
+        ),
+        height=48,
+        expand=True
+    )
 
     # --- Main UI ---
     header = ft.Container(
@@ -385,16 +420,16 @@ def main(page: ft.Page):
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN
         ),
-        padding=ft.Padding.only(left=20, right=10, top=15, bottom=5)
+        padding=ft.Padding.only(left=20, right=10, top=45, bottom=5)
     )
 
     search_card = modern_card(
         ft.Column([
-            ft.Text("Tìm kiếm SOC BMT", size=12, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_400),
             error_text,
-            ft.Row([input_field, button_container], alignment=ft.MainAxisAlignment.CENTER, spacing=10, vertical_alignment=ft.CrossAxisAlignment.START),
+            input_field,
+            ft.Row([reset_button, button_container], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
             suggestions_container,
-        ], spacing=5)
+        ], spacing=10)
     )
 
     summary_card = modern_card(
