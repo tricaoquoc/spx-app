@@ -20,7 +20,7 @@ def save_cookie(cookie_str):
 
 def main(page: ft.Page):
     # Cấu hình Page
-    page.title = "SPX Hub Search"
+    page.title = "SOC BMT Tracking"
     page.window_width = 450
     page.window_height = 850
     page.theme_mode = ft.ThemeMode.LIGHT
@@ -313,11 +313,53 @@ def main(page: ft.Page):
                         quantity = item.get("quantity", 0)
                         total_qty += int(quantity) if str(quantity).isdigit() else 0
                         
+                        def create_to_click_handler(to_num):
+                            async def handler(e):
+                                await page.clipboard.set(to_num)
+                                
+                                snack = ft.SnackBar(ft.Text(f"Đã copy mã: {to_num}"), bgcolor=ft.Colors.GREEN_600)
+                                page.snack_bar = snack
+                                snack.open = True
+                                page.update()
+                                
+                                def close_dialog(e):
+                                    page.pop_dialog()
+
+                                qr_dialog = ft.AlertDialog(
+                                    title=ft.Text(f"{to_num}", text_align=ft.TextAlign.CENTER, size=18, weight=ft.FontWeight.BOLD, color=PRIMARY_COLOR),
+                                    content=ft.Container(
+                                        content=ft.Image(
+                                            src=f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={to_num}&margin=1",
+                                            width=220,
+                                            height=220,
+                                        ),
+                                        alignment=ft.Alignment.CENTER,
+                                        width=250,
+                                        height=250
+                                    ),
+                                    actions=[
+                                        ft.ElevatedButton("Đóng", on_click=close_dialog, bgcolor=ft.Colors.GREY_200, color=ft.Colors.BLACK)
+                                    ],
+                                    actions_alignment=ft.MainAxisAlignment.CENTER,
+                                    shape=ft.RoundedRectangleBorder(radius=16)
+                                )
+                                page.show_dialog(qr_dialog)
+                            return handler
+
                         rows.append(
                             ft.DataRow(
                                 cells=[
-                                    ft.DataCell(ft.Text(to_number, weight=ft.FontWeight.W_500, color=ft.Colors.GREY_800)),
-                                    ft.DataCell(ft.Text(str(quantity), color=PRIMARY_COLOR, weight=ft.FontWeight.BOLD))
+                                    ft.DataCell(
+                                        ft.Container(
+                                            content=ft.Row([
+                                                ft.Icon(ft.Icons.QR_CODE_SCANNER, size=18, color=PRIMARY_COLOR),
+                                                ft.Text(to_number, weight=ft.FontWeight.BOLD, color=PRIMARY_COLOR)
+                                            ], spacing=5),
+                                            on_click=create_to_click_handler(to_number),
+                                            tooltip="Click để copy & xem mã QR"
+                                        )
+                                    ),
+                                    ft.DataCell(ft.Text(str(quantity), color=ft.Colors.GREY_800, weight=ft.FontWeight.BOLD))
                                 ]
                             )
                         )
@@ -409,7 +451,7 @@ def main(page: ft.Page):
             controls=[
                 ft.Row([
                     ft.Icon(ft.Icons.LOCAL_SHIPPING, color=PRIMARY_COLOR, size=28),
-                    ft.Text("SPX Tracking", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_800),
+                    ft.Text("SOC BMT Tracking", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_800),
                 ], spacing=10),
                 ft.IconButton(
                     icon=ft.Icons.SETTINGS_OUTLINED, 
