@@ -282,20 +282,20 @@ def main(page: ft.Page):
     packed_value_text = ft.Text("0", size=32, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE)
     packed_card = ft.Container(
         content=ft.Column([
-            ft.Text("📦 SOC Packed", size=16, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+            ft.Text("📦 SOC Packed", size=16, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE, text_align=ft.TextAlign.CENTER),
             packed_value_text,
         ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-        bgcolor=ft.Colors.ORANGE_500, border_radius=16, padding=20, expand=True,
+        bgcolor=ft.Colors.ORANGE_500, border_radius=16, padding=20, expand=True, height=130,
         shadow=ft.BoxShadow(spread_radius=0, blur_radius=15, color=ft.Colors.with_opacity(0.3, ft.Colors.ORANGE_500), offset=ft.Offset(0, 4))
     )
     
     received_value_text = ft.Text("0", size=32, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE)
     received_card = ft.Container(
         content=ft.Column([
-            ft.Text("📥 SOC Received", size=16, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+            ft.Text("📥 SOC Received", size=16, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE, text_align=ft.TextAlign.CENTER),
             received_value_text,
         ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-        bgcolor=ft.Colors.GREEN_500, border_radius=16, padding=20, expand=True,
+        bgcolor=ft.Colors.GREEN_500, border_radius=16, padding=20, expand=True, height=130,
         shadow=ft.BoxShadow(spread_radius=0, blur_radius=15, color=ft.Colors.with_opacity(0.3, ft.Colors.GREEN_500), offset=ft.Offset(0, 4))
     )
 
@@ -528,14 +528,14 @@ def main(page: ft.Page):
                                         ft.Container(
                                             content=ft.Row([
                                                 ft.Icon(ft.Icons.QR_CODE_SCANNER, size=18, color=PRIMARY_COLOR),
-                                                ft.Text(to_number, weight=ft.FontWeight.BOLD, color=PRIMARY_COLOR, size=13, overflow=ft.TextOverflow.ELLIPSIS)
+                                                ft.Text(to_number, weight=ft.FontWeight.BOLD, color=PRIMARY_COLOR, size=13, expand=True, selectable=True)
                                             ], spacing=5, alignment=ft.MainAxisAlignment.START),
                                             on_click=create_to_click_handler(to_number),
                                             tooltip="Click để copy mã",
-                                            expand=3
+                                            expand=4
                                         ),
-                                        ft.Text(str(quantity), color=ft.Colors.GREY_800, weight=ft.FontWeight.BOLD, size=13, text_align=ft.TextAlign.CENTER, expand=2),
-                                        ft.Text(sender_name, color=ft.Colors.GREY_600, size=12, expand=3, overflow=ft.TextOverflow.ELLIPSIS, text_align=ft.TextAlign.RIGHT)
+                                        ft.Text(str(quantity), color=ft.Colors.GREY_800, weight=ft.FontWeight.BOLD, size=13, text_align=ft.TextAlign.CENTER, expand=1),
+                                        ft.Text(sender_name, color=ft.Colors.GREY_600, size=12, expand=2, overflow=ft.TextOverflow.ELLIPSIS, text_align=ft.TextAlign.RIGHT)
                                     ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER),
                                     padding=ft.Padding(15, 12, 15, 12),
                                     border=ft.Border(bottom=ft.BorderSide(1, ft.Colors.GREY_100))
@@ -547,9 +547,9 @@ def main(page: ft.Page):
                         
                         header_row = ft.Container(
                             content=ft.Row([
-                                ft.Text("TO Number", color=ft.Colors.GREY_500, size=12, expand=3),
-                                ft.Text("Số lượng", color=ft.Colors.GREY_500, size=12, text_align=ft.TextAlign.CENTER, expand=2),
-                                ft.Text("Sender", color=ft.Colors.GREY_500, size=12, text_align=ft.TextAlign.RIGHT, expand=3),
+                                ft.Text("TO Number", color=ft.Colors.GREY_500, size=12, expand=4),
+                                ft.Text("Quantity", color=ft.Colors.GREY_500, size=12, text_align=ft.TextAlign.CENTER, expand=1),
+                                ft.Text("Sender", color=ft.Colors.GREY_500, size=12, text_align=ft.TextAlign.RIGHT, expand=2),
                             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
                             padding=ft.Padding(15, 10, 15, 10),
                             bgcolor=ft.Colors.with_opacity(0.02, ft.Colors.BLACK),
